@@ -1,0 +1,199 @@
+/* General Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main Heading */
+.main-heading {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Volvo Logo */
+#volvo-logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 150px; /* Maximum size */
+  width: 100%; /* Make it responsive */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Current Date Styling */
+#current-date {
+  text-align: right;
+  margin: 10px 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Info Table Styling */
+#info-table {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-collapse: collapse;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#info-table th, #info-table td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: left;
+}
+
+/* Checklist Table Styling */
+#checklist-table {
+  width: 90%;
+  max-width: 100%; /* Full width for small screens */
+  border-collapse: collapse;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#checklist-table th, #checklist-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+#checklist-table th {
+  background-color: #f2f2f2;
+  font-weight: 700;
+  color: #333;
+}
+
+#checklist-table td {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Frequency Column Styling */
+#checklist-table td:last-child {
+  font-weight: 700;
+}
+
+/* Status Text Styling */
+.status-text {
+  font-weight: bold;
+  color: red;
+}
+
+/* File Input Styling */
+.file-input {
+  display: inline-block;
+  width: 100%;
+}
+
+/* Upload Button Styling */
+.upload-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
+/* Submit Button */
+#submit-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+#submit-button:hover {
+  background-color: #218838;
+}
+
+/* Submit Container */
+.submit-container {
+  text-align: center;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+  #volvo-logo {
+    max-width: 120px; /* Slightly smaller max size */
+  }
+
+  #current-date {
+    font-size: 14px; /* Adjust text size */
+  }
+
+  #checklist-table {
+    width: 100%; /* Full width table */
+    font-size: 12px; /* Smaller font size */
+  }
+
+  #checklist-table th, #checklist-table td {
+    padding: 8px; /* Reduce padding */
+  }
+
+  #submit-button {
+    width: 100%; /* Full-width submit button */
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  #volvo-logo {
+    max-width: 100px; /* Further reduce max size for small screens */
+  }
+
+  #current-date {
+    font-size: 12px; /* Smaller text size */
+  }
+
+  #checklist-table {
+    font-size: 10px; /* Even smaller font for mobile */
+  }
+
+  #checklist-table th, #checklist-table td {
+    padding: 5px; /* Smaller padding for mobile */
+  }
+
+  #submit-button {
+    width: 100%; /* Full-width button on smaller devices */
+    font-size: 14px; /* Adjust button font size */
+  }
+
+  select[multiple] {
+    height: 60px; /* Adjust dropdown height */
+  }
+}
+
+/* Additional Responsiveness */
+@media only screen and (max-width: 320px) {
+  #current-date {
+    font-size: 10px; /* Smaller text size */
+  }
+
+  #checklist-table {
+    font-size: 9px; /* Smaller font for very small screens */
+  }
+
+  #checklist-table th, #checklist-table td {
+    padding: 3px; /* Even smaller padding for very small screens */
+  }
+
+  #submit-button {
+    font-size: 12px; /* Adjust button font size */
+  }
+}

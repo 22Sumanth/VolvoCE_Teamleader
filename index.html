@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist App</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
+  
+</head>
+<body>
+  <!-- Main Heading -->
+  <header>
+    <h1 class="main-heading">TEAM LEADER DAILY MANAGEMENT ACTIVITY</h1>
+  </header>
+
+  <!-- Volvo Logo -->
+  <img src="file.png" alt="Volvo Logo" id="volvo-logo">
+
+  <!-- Current Month and Year Display -->
+  <div id="current-date" style="text-align: right; margin: 10px;"></div>
+
+  <!-- Small Info Table -->
+  <table id="info-table" style="float: right; margin: 20px;">
+    <tr>
+      <th>Month</th>
+      <th>Year</th>
+      <th>Leader Name</th>
+    </tr>
+    <tr>
+      <td id="current-month"></td>
+      <td id="current-year"></td>
+      <td>MURALI</td> <!-- Replace with actual leader name -->
+    </tr>
+  </table>
+
+  <!-- Checklist Table -->
+  <table id="checklist-table">
+    <thead>
+      <tr>
+        <th>Daily Management Activities</th>
+        <th>Supporting Document</th>
+        <th>Action</th>
+        <th>Status</th>
+        <th>Date Uploaded</th>
+        <th>Frequency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Weekly Tasks -->
+      <tr id="item-manpower">
+        <td>MAN-POWER ALLOTMENT</td>
+        <td>
+          <button class="click-me-button" onclick="window.location.href='manpower.html'">Click Here</button>
+        </td>
+        <td>
+          <button class="mark-complete-button" data-item-id="manpower">Mark Complete</button>
+        </td>
+        <td><span class="status-text">Pending</span></td>
+        <td><input type="date" class="date-input" data-item-id="manpower" disabled></td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-2">
+        <td>5S GAP POINTS CLEARENCE</td>
+        <td>
+          <input type="file" class="file-input" data-item-id="2">
+        </td>
+        <td>
+          <button class="upload-button" data-item-id="2">Upload</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="2">
+          <input type="date" class="date-input" data-item-id="2">
+        </td>
+        <td>Weekly</td>
+      </tr>
+      <tr id="item-5">
+        <td>DAILY RED TAG CLEARENCE</td>
+        <td>
+          <input type="file" class="file-input" data-item-id="5">
+        </td>
+        <td>
+          <button class="upload-button" data-item-id="5">Upload</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="5">
+          <input type="date" class="date-input" data-item-id="5">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-8">
+        <td>MULTI SKILL JOB AND ON JOB TRAINING</td>
+        <td>
+          <input type="file" class="file-input" data-item-id="8">
+        </td>
+        <td>
+          <button class="upload-button" data-item-id="8">Upload</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="8">
+          <input type="date" class="date-input" data-item-id="8">
+        </td>
+        <td>Weekly</td>
+      </tr>
+      <tr id="item-11">
+        <td>DAILY PRODUCTION REPORT UPDATION</td>
+        <td>
+          <input type="file" class="file-input" data-item-id="11">
+        </td>
+        <td>
+          <button class="upload-button" data-item-id="11">Upload</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="11">
+          <input type="date" class="date-input" data-item-id="11">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <!-- Daily Tasks -->
+      <tr id="item-1">
+        <td>DAILY MEETINGS</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="1">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="1">
+          <input type="date" class="date-input" data-item-id="1">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-3">
+        <td>ATTENDING ANDON CALLS</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="3">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="3">
+          <input type="date" class="date-input" data-item-id="3">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-4">
+        <td>DAILY CHECKS ON TOOL CHECKLIST</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="4">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="4">
+          <input type="date" class="date-input" data-item-id="4">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-6">
+        <td>CHECKSHEETS AND BOARD UPDATION</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="6">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="6">
+          <input type="date" class="date-input" data-item-id="6">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-7">
+        <td>ATTENDING MRB MEETING</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="7">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="7">
+          <input type="date" class="date-input" data-item-id="7">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-9">
+        <td>HOLD VEHICLE CLEARENCE</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="9">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="9">
+          <input type="date" class="date-input" data-item-id="9">
+        </td>
+        <td>Daily</td>
+      </tr>
+      <tr id="item-10">
+        <td>MII AND MACHINE CARD ENTRY</td>
+        <td>NA</td>
+        <td>
+          <button class="complete-button" data-item-id="10">Mark Complete</button>
+        </td>
+        <td class="status">
+          <span class="status-text">Pending</span>
+        </td>
+        <td class="date-uploaded" data-item-id="10">
+          <input type="date" class="date-input" data-item-id="10">
+        </td>
+        <td>Daily</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Submit Button -->
+  <div class="submit-container">
+    <button id="submit-button">Submit All</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Function to display current month and year in the info table
+    function displayCurrentMonthYear() {
+      const today = new Date();
+      const monthNames = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+      ];
+      const month = monthNames[today.getMonth()];
+      const year = today.getFullYear();
+
+      // Set the month and year in the table
+      document.getElementById('current-month').textContent = month;
+      document.getElementById('current-year').textContent = year;
+    }
+
+    // Call the function to display the month and year in the table
+    displayCurrentMonthYear();
+  </script>
+</body>
+</html>

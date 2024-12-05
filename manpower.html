@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Man-Power Allotment</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Main Heading */
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #343a40;
+        }
+
+        /* Table Styling */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Checkbox Container Styling */
+        .worker-checkboxes {
+            text-align: left;
+        }
+
+        /* Button Styling */
+        button {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Input Styling */
+        input[type="text"], input[type="number"] {
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        /* Center Save Allotment Button */
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Man-Power Allotment</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Select Workers</th>
+                <th>Selected Workers</th>
+                <th>Add Worker</th>
+                <th>Remove Worker</th>
+            </tr>
+        </thead>
+        <tbody id="station-table">
+            <!-- JavaScript will insert rows here -->
+        </tbody>
+    </table>
+
+    <div class="center-button">
+        <button id="save-manpower">Save Allotment</button>
+    </div>
+
+    <script>
+        const workers = [
+            "John Doe", "Jane Smith", "Alice Johnson", "Bob Brown", 
+            "Chris Green", "Eve White", "Paul Black", "Anna Blue", 
+            "Mike Red", "Sara Yellow"
+        ];
+
+        const predefinedSkills = [2, 3, 4, 1]; // Fixed skill levels
+        let workerSkills = {}; // To store skills for each worker based on station
+        let addedWorkers = {}; // To store added workers for each station
+
+        function loadWorkerSkills() {
+            for (let station = 1; station <= 30; station++) {
+                workers.forEach((worker, index) => {
+                    // Assign skills based on the index of the worker
+                    workerSkills[`${worker}-Station${station}`] = predefinedSkills[index % predefinedSkills.length];
+                });
+            }
+        }
+
+        loadWorkerSkills(); // Load skills on page load
+
+        // Load added workers from local storage
+        function loadAddedWorkers() {
+            const storedWorkers = localStorage.getItem('addedWorkers');
+            if (storedWorkers) {
+                addedWorkers = JSON.parse(storedWorkers);
+            }
+        }
+
+        // Save added workers to local storage
+        function saveAddedWorkers() {
+            localStorage.setItem('addedWorkers', JSON.stringify(addedWorkers));
+        }
+
+        const stationTable = document.getElementById('station-table');
+
+        for (let i = 1; i <= 30; i++) { // Now with 30 stations
+            const row = document.createElement('tr');
+
+            const stationCell = document.createElement('td');
+            stationCell.textContent = `Station ${i}`;
+            row.appendChild(stationCell);
+
+            const workerCell = document.createElement('td');
+            const workerCheckboxesDiv = document.createElement('div');
+            workerCheckboxesDiv.classList.add('worker-checkboxes');
+            workerCheckboxesDiv.id = `worker-checkboxes-${i}`; // Unique ID for each station's worker container
+
+            workers.forEach(worker => {
+                const checkboxContainer = createWorkerCheckbox(worker, i);
+                workerCheckboxesDiv.appendChild(checkboxContainer);
+            });
+
+            // Add previously added workers to the checkbox list
+            if (addedWorkers[`Station ${i}`]) {
+                addedWorkers[`Station ${i}`].forEach(worker => {
+                    const checkboxContainer = createWorkerCheckbox(worker, i);
+                    workerCheckboxesDiv.appendChild(checkboxContainer);
+                });
+            }
+
+            workerCell.appendChild(workerCheckboxesDiv);
+            row.appendChild(workerCell);
+
+            const selectedWorkersCell = document.createElement('td');
+            selectedWorkersCell.id = `selected-workers-${i}`;
+            row.appendChild(selectedWorkersCell);
+
+            const addWorkerCell = document.createElement('td');
+            const addWorkerForm = createAddWorkerForm(i);
+            addWorkerCell.appendChild(addWorkerForm);
+            row.appendChild(addWorkerCell);
+
+            const removeWorkerCell = document.createElement('td');
+            const removeWorkerForm = createRemoveWorkerForm(i);
+            removeWorkerCell.appendChild(removeWorkerForm);
+            row.appendChild(removeWorkerCell);
+
+            stationTable.appendChild(row);
+        }
+
+        function createWorkerCheckbox(worker, station) {
+            const checkboxContainer = document.createElement('div');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `worker-${worker}-${station}`;
+            checkbox.value = worker;
+            checkbox.addEventListener('change', () => updateSelectedWorkers(station));
+
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = `${worker} (Skill: ${workerSkills[`${worker}-Station${station}`]})`;
+
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(label);
+            return checkboxContainer;
+        }
+
+        function updateSelectedWorkers(station) {
+            const selectedWorkersCell = document.getElementById(`selected-workers-${station}`);
+            const checkboxes = document.querySelectorAll(`input[id^="worker-"][id$="-${station}"]:checked`);
+            const selectedWorkers = Array.from(checkboxes).map(checkbox => checkbox.value);
+            selectedWorkersCell.textContent = selectedWorkers.join(', ');
+        }
+
+        // Function to create a form for adding a worker with a skill level
+        function createAddWorkerForm(station) {
+            const form = document.createElement('form');
+            form.onsubmit = function(event) {
+                event.preventDefault(); // Prevent form submission from reloading the page
+                const workerName = form.querySelector('input[name="worker-name"]').value;
+                const skillLevel = form.querySelector('input[name="skill-level"]').value;
+
+                if (workerName && skillLevel >= 1 && skillLevel <= 4) {
+                    // Store added worker
+                    if (!addedWorkers[`Station ${station}`]) {
+                        addedWorkers[`Station ${station}`] = [];
+                    }
+                    addedWorkers[`Station ${station}`].push(workerName);
+                    saveAddedWorkers(); // Save to local storage
+
+                    workerSkills[`${workerName}-Station${station}`] = skillLevel;
+                    addWorkerToStation(workerName, station, skillLevel);
+                } else {
+                    alert('Please enter a valid worker name and skill level between 1 and 4.');
+                }
+
+                form.reset(); // Reset the form inputs
+            };
+
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.name = 'worker-name';
+            nameInput.placeholder = 'Worker Name';
+
+            const skillInput = document.createElement('input');
+            skillInput.type = 'number';
+            skillInput.name = 'skill-level';
+            skillInput.min = 1;
+            skillInput.max = 4;
+            skillInput.placeholder = 'Skill (1-4)';
+
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.textContent = 'Add Worker';
+
+            form.appendChild(nameInput);
+            form.appendChild(skillInput);
+            form.appendChild(submitButton);
+
+            return form;
+        }
+
+        // Function to create a form for removing a worker
+        function createRemoveWorkerForm(station) {
+            const form = document.createElement('form');
+            form.onsubmit = function(event) {
+                event.preventDefault(); // Prevent form submission from reloading the page
+                const workerName = form.querySelector('input[name="remove-worker-name"]').value;
+
+                if (workerName) {
+                    removeWorkerFromStation(workerName, station);
+                } else {
+                    alert('Please enter a worker name.');
+                }
+
+                form.reset(); // Reset the form inputs
+            };
+
+            const removeNameInput = document.createElement('input');
+            removeNameInput.type = 'text';
+            removeNameInput.name = 'remove-worker-name';
+            removeNameInput.placeholder = 'Worker Name to Remove';
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'submit';
+            removeButton.textContent = 'Remove Worker';
+
+            form.appendChild(removeNameInput);
+            form.appendChild(removeButton);
+
+            return form;
+        }
+
+        function addWorkerToStation(workerName, station, skillLevel) {
+            const workerCheckboxesDiv = document.getElementById(`worker-checkboxes-${station}`);
+            const checkboxContainer = createWorkerCheckbox(workerName, station);
+            workerCheckboxesDiv.appendChild(checkboxContainer);
+            updateSelectedWorkers(station);
+        }
+
+        function removeWorkerFromStation(workerName, station) {
+            const workerCheckbox = document.getElementById(`worker-${workerName}-${station}`);
+            if (workerCheckbox) {
+                workerCheckbox.checked = false;
+                workerCheckbox.parentElement.remove(); // Remove the checkbox container
+                updateSelectedWorkers(station);
+                // Remove from added workers storage
+                addedWorkers[`Station ${station}`] = addedWorkers[`Station ${station}`].filter(worker => worker !== workerName);
+                saveAddedWorkers(); // Save updated workers to local storage
+            } else {
+                alert('Worker not found in this station.');
+            }
+        }
+
+        document.getElementById('save-manpower').addEventListener('click', () => {
+            saveAddedWorkers(); // Save added workers when the button is clicked
+            alert('Allotment saved successfully!');
+            window.location.href = 'index.html'; // Redirect to index.html
+        });
+
+        loadAddedWorkers(); // Load added workers when the page is loaded
+    </script>
+</body>
+</html>
